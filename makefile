@@ -1,5 +1,22 @@
-all:
-	g++ -std=c++11 adhocSim.cpp -o adhocSim.exe
+CC = g++
+LFLAGS = -std=c++11
+CFLAGS = -c -Wall
+
+PROGRAM_ONE = adhocSim
+
+COMMON_SOURCES = Node.cpp Functions.cpp
+PROGRAM_ONE_SOURCE = adhocSim.cpp
+
+COMMON_OBJECTS = $(COMMON_SOURCES:.cpp=.o)
+PROGRAM_ONE_OBJECT = $(PROGRAM_ONE_SOURCE:.cpp=.o)
+
+all: $(PROGRAM_ONE) $(PROGRAM_TWO) $(PROGRAM_THREE) $(PROGRAM_FOUR)
+
+$(PROGRAM_ONE): $(COMMON_OBJECTS) $(PROGRAM_ONE_OBJECT)
+	$(CC) -o $(PROGRAM_ONE) $(COMMON_OBJECTS) $(PROGRAM_ONE_OBJECT)
+
+.cpp.o:
+	$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
 
 clean:
-	rm adhocSim.exe
+	$(RM) *.o *~ $(PROGRAM_ONE)
