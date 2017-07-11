@@ -27,9 +27,8 @@ void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,in
 	int randSrc = (rand() % 10);
 	int randDest = (rand() % 10);
 	
-	while(randSrc == randDest) {
+	while(randSrc == randDest) 
 		randDest = (rand() % 10);
-	}
 	
 	int count = 0;
 	for(auto it = nodeMap -> begin(); it != nodeMap -> end(); it++) {
@@ -49,9 +48,9 @@ void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,in
 		}
 		count++;
 	}
+
 	cout << "Source: (" << srcX << ", " << srcY << "), ";
 	cout << "Destination: (" << destX << ", " << destY << ") " << endl;
-	cout << endl;
 }
 
 void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY) {
@@ -61,14 +60,17 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 	nextQueue.push(make_pair(srcNode -> first, srcNode -> second));
 	srcNode -> second -> flagNode();
 	int unflagged = nodeMap.size() - 1;
+	int totalTime = 0;
+	int totalNodes = 0;
 	
 	while(!nextQueue.empty() && !destinationReached) {
 		for(auto it = nodeMap.begin(); it != nodeMap.end() && unflagged != 0; it++) {
 			if(nextQueue.front().second -> isDest()) {
-				//cout << "Found it." << endl;
 				destinationReached = true;
+				totalNodes = nextQueue.size();
 				break;
 			}
+			totalTime += 100;
 			pair<tuple<int, int>, Node*> topPair = nextQueue.front();
 			tuple<int, int> topCoordinates = topPair.first;
 			Node *topNode = new Node;
@@ -85,30 +87,28 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 				
 				it -> second -> flagNode();
 				it -> second -> setPrevious(topNode);
-				//cout << "Testing: " << get<0>(it -> second -> getPrevious() -> getCoordinates()) << " " <<
-				//		get<1>(it -> second -> getPrevious() -> getCoordinates()) << endl;
 				unflagged--;
-				//cout << "Enqueue: " << get<0>(tempCoordinates) << " " << get<1>(tempCoordinates) << endl;
-				//cout << "Queue size: " << nextQueue.size() << endl;
-				
 				
 				nextQueue.push(make_pair(tempCoordinates, tempNode));
-				//cout << "Unflagged " << unflagged << endl;
 			}
 		}
 		nextQueue.pop();
 	}
+	cout << "Total time taken is: " << totalTime << " ms." << endl;
+	cout << "Total nodes visited: " << (totalTime / 100) + totalNodes << "." << endl;
 }
 
 void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
 	auto it = nodeMap.find(make_pair(destX, destY));
 	Node *nodePtr = it -> second;
+	int counter = 1;
 	cout << "(" << get<0>(nodePtr -> getCoordinates()) << ", " << get<1>(nodePtr -> getCoordinates()) << ")";
 	nodePtr = nodePtr -> getPrevious();
 	while(nodePtr != NULL) {
 		cout << " <- (" << get<0>(nodePtr -> getCoordinates()) << ", "
-		<< get<1>(nodePtr -> getCoordinates()) << ")";
+			 << get<1>(nodePtr -> getCoordinates()) << ")";
 		nodePtr = nodePtr -> getPrevious();
+		counter++; 
 	}
 	cout << endl;
 	cout << endl;

@@ -10,6 +10,7 @@ using namespace std;
 
 
 int main() {
+	cout << endl;
 	int srcX = 0, srcY = 0, destX = 0, destY = 0;
 	srand((int)time(0));
 	map<tuple<int, int>, Node* > nodeMap;
@@ -42,6 +43,7 @@ int main() {
 		}
 		cout << endl;
 	}
+	cout << endl;
 	// end print matrix 
 
 	return 0;
