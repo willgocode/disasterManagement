@@ -2,7 +2,7 @@ CC = g++
 LFLAGS = -std=c++11
 CFLAGS = -c -Wall
 
-PROGRAM_ONE = adhocSim
+PROGRAM_ONE = adhocSim.exe
 
 COMMON_SOURCES = Node.cpp Functions.cpp
 PROGRAM_ONE_SOURCE = adhocSim.cpp
