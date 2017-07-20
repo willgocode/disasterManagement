@@ -1,8 +1,7 @@
 #ifndef FUNCTIONS_CPP
 #define FUNCTIONS_CPP
 #include <iostream>
-#include <ctime>
-#include <tuple>
+#include <ctime> #include <tuple>
 #include <map>
 #include <queue>
 #include "Node.cpp"

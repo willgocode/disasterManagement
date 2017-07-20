@@ -11,6 +11,7 @@ private:
 	bool _isDestination;
 	int _xCoordinate;
 	int _yCoordinate;
+	int currentChannel;
 	Node * _previous;
 	
 public:
@@ -21,12 +22,14 @@ public:
 	bool isSource() { return _isSource; }
 	bool isDest() { return _isDestination; }
 	tuple<int, int> getCoordinates() { return make_tuple(_xCoordinate, _yCoordinate); }
+	int getCurrentChannel() { return currentChannel; }
 	
 	void flagNode() { _flagged = true; }
 	void setSource(int x, int y) { _xCoordinate = x; _yCoordinate = y; _isSource = true; }
 	void setDest(int x, int y) { _xCoordinate = x; _yCoordinate = y; _isDestination = true; }
 	void setPrevious(Node *previous) { _previous = previous; }
 	void setCoordinates(int x, int y) { _xCoordinate = x; _yCoordinate = y; }
+	void cycleChannel() { if(currentChannel < 5) currentChannel++; else currentChannel = 0; }
 };
 
 
