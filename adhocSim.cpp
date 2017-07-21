@@ -12,17 +12,19 @@ using namespace std;
 int main() {
 	cout << endl;
 	int srcX = 0, srcY = 0, destX = 0, destY = 0;
+	int numberOfNodes = 500;
+	int matrixSize = 50;
 	srand((int)time(0));
 	map<tuple<int, int>, Node* > nodeMap;
 	
-	generateNodes(&nodeMap);
-	createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY);
+	generateNodes(&nodeMap, numberOfNodes, matrixSize);
+	createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
 	findPath(nodeMap, srcX, srcY, destX, destY);
 	printPath(nodeMap, destX, destY);
 
-	int nodeMatrix[10][10];
-	for(int i = 0; i < 10; i++) {
-		for(int j = 0; j < 10; j++) {
+	int nodeMatrix[matrixSize][matrixSize];
+	for(int i = 0; i < matrixSize; i++) {
+		for(int j = 0; j < matrixSize; j++) {
 			nodeMatrix[i][j] = 0;
 		}
 	}
@@ -37,8 +39,8 @@ int main() {
 	// end set up matrix 
 
 	// print matrix 
-	for(int i = 0; i < 10; i++) {
-		for(int j = 0; j < 10; j++) {
+	for(int i = 0; i < matrixSize; i++) {
+		for(int j = 0; j < matrixSize; j++) {
 			cout << nodeMatrix[i][j] << " ";
 		}
 		cout << endl;

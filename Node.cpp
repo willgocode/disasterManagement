@@ -11,25 +11,26 @@ private:
 	bool _isDestination;
 	int _xCoordinate;
 	int _yCoordinate;
-	int currentChannel;
+	int _currentChannel;
 	Node * _previous;
 	
 public:
-	Node() { _flagged = false; _isSource = false; _previous = NULL; }
+	Node() { _flagged = false; _isSource = false; _isDestination = false;
+		_xCoordinate = 0; _yCoordinate = 0; _currentChannel = rand() % 5; _previous = NULL;}
 	
 	Node * getPrevious() { return _previous; };
 	bool isFlagged() { return _flagged; }
 	bool isSource() { return _isSource; }
 	bool isDest() { return _isDestination; }
 	tuple<int, int> getCoordinates() { return make_tuple(_xCoordinate, _yCoordinate); }
-	int getCurrentChannel() { return currentChannel; }
+	int getCurrentChannel() { return _currentChannel; }
 	
 	void flagNode() { _flagged = true; }
 	void setSource(int x, int y) { _xCoordinate = x; _yCoordinate = y; _isSource = true; }
 	void setDest(int x, int y) { _xCoordinate = x; _yCoordinate = y; _isDestination = true; }
 	void setPrevious(Node *previous) { _previous = previous; }
 	void setCoordinates(int x, int y) { _xCoordinate = x; _yCoordinate = y; }
-	void cycleChannel() { if(currentChannel < 5) currentChannel++; else currentChannel = 0; }
+	void cycleChannel() { if(_currentChannel < 5) _currentChannel++; else _currentChannel = 0; }
 };
 
 

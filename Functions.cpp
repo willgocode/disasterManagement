@@ -1,7 +1,8 @@
 #ifndef FUNCTIONS_CPP
 #define FUNCTIONS_CPP
 #include <iostream>
-#include <ctime> #include <tuple>
+#include <ctime> 
+#include <tuple>
 #include <map>
 #include <queue>
 #include "Node.cpp"
@@ -9,10 +10,10 @@
 
 using namespace std;
 
-void generateNodes(map<tuple<int, int>, Node* > *nodeMap) {
-	while(nodeMap -> size() != 20) {
-		int randX = (rand() % 10);
-		int randY = (rand() % 10);
+void generateNodes(map<tuple<int, int>, Node* > *nodeMap, int numberOfNodes, int matrixSize) {
+	while(nodeMap -> size() != numberOfNodes) {
+		int randX = (rand() % matrixSize);
+		int randY = (rand() % matrixSize);
 		if(nodeMap -> find(make_tuple(randX, randY)) == nodeMap -> end()) {
 			Node *tempNode = new Node;
 			tempNode -> setCoordinates(randX, randY);
@@ -22,12 +23,13 @@ void generateNodes(map<tuple<int, int>, Node* > *nodeMap) {
 	}
 }
 
-void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,int &srcY,int &destX,int &destY) {
-	int randSrc = (rand() % 10);
-	int randDest = (rand() % 10);
+void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,int &srcY,int &destX,
+		int &destY, int numberOfNodes) {
+	int randSrc = (rand() % numberOfNodes);
+	int randDest = (rand() % numberOfNodes);
 	
 	while(randSrc == randDest) 
-		randDest = (rand() % 10);
+		randDest = (rand() % numberOfNodes);
 	
 	int count = 0;
 	for(auto it = nodeMap -> begin(); it != nodeMap -> end(); it++) {
@@ -70,6 +72,9 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 				break;
 			}
 			totalTime += 100;
+
+			if(totalTime > 12000) { cout << "Request timed out." << endl; return; }
+
 			pair<tuple<int, int>, Node*> topPair = nextQueue.front();
 			tuple<int, int> topCoordinates = topPair.first;
 			Node *topNode = new Node;
@@ -93,8 +98,14 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 		}
 		nextQueue.pop();
 	}
+
+	if(!destinationReached) {
+		cout << "No path found." << endl;
+		return;
+	}
+
 	cout << "Total time taken is: " << totalTime << " ms." << endl;
-	cout << "Total nodes visited: " << (totalTime / 100) + totalNodes << "." << endl;
+	//cout << "Number of unique nodes visited: " << totalNodes << "." << endl;
 }
 
 void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
@@ -113,4 +124,9 @@ void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
 	cout << endl;
 }
 
+void cycleAllNodes(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY) {
+	tuple<int, int> srcCoordinates = make_tuple(srcX, srcY);
+	tuple<int, int> destCoordinates = make_tuple(destX, destY);
+
+}
 #endif
