@@ -63,6 +63,9 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 	int unflagged = nodeMap.size() - 1;
 	int totalTime = 0;
 	int totalNodes = 0;
+	int timeWaitedForChannel = 0;
+	int timesTimedOut = 0;
+	int timesNotFound = 0;
 	
 	while(!nextQueue.empty() && !destinationReached) {
 		for(auto it = nodeMap.begin(); it != nodeMap.end() && unflagged != 0; it++) {
@@ -89,6 +92,11 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 			   get<1>(tempCoordinates) >= get<1>(topCoordinates) - 3 &&
 			   !tempNode -> isFlagged()) {
 				
+				while(tempNode -> getCurrentChannel() != srcNode -> second -> getCurrentChannel()) {
+					cycleAllNodes(nodeMap, srcX, srcY, destX, destY);
+					timeWaitedForChannel += 10;
+				}
+					
 				it -> second -> flagNode();
 				it -> second -> setPrevious(topNode);
 				unflagged--;
@@ -105,6 +113,7 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 	}
 
 	cout << "Total time taken is: " << totalTime << " ms." << endl;
+	cout << "Total time waited for a channel: " << timeWaitedForChannel << " ms." << endl;
 	//cout << "Number of unique nodes visited: " << totalNodes << "." << endl;
 }
 
@@ -128,5 +137,12 @@ void cycleAllNodes(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, in
 	tuple<int, int> srcCoordinates = make_tuple(srcX, srcY);
 	tuple<int, int> destCoordinates = make_tuple(destX, destY);
 
+	for(auto it = nodeMap.begin(); it != nodeMap.end(); it++) {
+		if(it -> first == srcCoordinates) 
+			continue;
+		if(it -> first == destCoordinates)
+			continue;
+		it -> second -> cycleChannel();
+	}
 }
 #endif

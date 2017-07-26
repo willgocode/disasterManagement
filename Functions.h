@@ -23,6 +23,6 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY);
 
 // run through map and cycle through channels
-void cycleAllNodes(map<tuple<int, int>, Node* > nodeMap, int srcX, int srcY, int destX, int destY);
+void cycleAllNodes(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY);
 
 #endif
