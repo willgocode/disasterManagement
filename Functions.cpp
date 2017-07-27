@@ -5,6 +5,7 @@
 #include <tuple>
 #include <map>
 #include <queue>
+#include <fstream>
 #include "Node.cpp"
 #include "Functions.h"
 
@@ -54,7 +55,8 @@ void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,in
 	cout << "Destination: (" << destX << ", " << destY << ") " << endl;
 }
 
-void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY) {
+bool findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY,
+		int numberOfNodes) {
 	bool destinationReached = false;
 	queue<pair<tuple<int, int>, Node*> > nextQueue;
 	auto srcNode = nodeMap.find(make_tuple(srcX, srcY));
@@ -66,6 +68,7 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 	int timeWaitedForChannel = 0;
 	int timesTimedOut = 0;
 	int timesNotFound = 0;
+	//ofstream outputStream("outputFor20.txt");
 	
 	while(!nextQueue.empty() && !destinationReached) {
 		for(auto it = nodeMap.begin(); it != nodeMap.end() && unflagged != 0; it++) {
@@ -76,7 +79,11 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 			}
 			totalTime += 100;
 
-			if(totalTime > 12000) { cout << "Request timed out." << endl; return; }
+			if(totalTime > 12000) { 
+				cout << "Request timed out." << endl;  
+				timesTimedOut += 1;
+				//return false; 
+			}
 
 			pair<tuple<int, int>, Node*> topPair = nextQueue.front();
 			tuple<int, int> topCoordinates = topPair.first;
@@ -91,10 +98,14 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 			   get<1>(tempCoordinates) <= get<1>(topCoordinates) + 3 &&
 			   get<1>(tempCoordinates) >= get<1>(topCoordinates) - 3 &&
 			   !tempNode -> isFlagged()) {
-				
-				while(tempNode -> getCurrentChannel() != srcNode -> second -> getCurrentChannel()) {
+				int current = 0;	
+				while(tempNode -> getCurrentChannel() != 
+						srcNode -> second -> getCurrentChannel()) {
 					cycleAllNodes(nodeMap, srcX, srcY, destX, destY);
 					timeWaitedForChannel += 10;
+					current += 1;
+					cout << "Cycling: " << current << " " <<  tempNode -> getCurrentChannel() << " " <<
+						srcNode -> second -> getCurrentChannel() << endl;
 				}
 					
 				it -> second -> flagNode();
@@ -109,12 +120,14 @@ void findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 
 	if(!destinationReached) {
 		cout << "No path found." << endl;
-		return;
+		timesNotFound += 1;
+		return false;
 	}
 
 	cout << "Total time taken is: " << totalTime << " ms." << endl;
 	cout << "Total time waited for a channel: " << timeWaitedForChannel << " ms." << endl;
 	//cout << "Number of unique nodes visited: " << totalNodes << "." << endl;
+	return true;
 }
 
 void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {

@@ -22,9 +22,10 @@ int main(int argc, char *argv[]) {
 		
 		generateNodes(&nodeMap, numberOfNodes, matrixSize);
 		createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
-		findPath(nodeMap, srcX, srcY, destX, destY);
-		printPath(nodeMap, destX, destY);
+		bool found = findPath(nodeMap, srcX, srcY, destX, destY, numberOfNodes);
+		if(found) { printPath(nodeMap, destX, destY); }
 
+		/*
 		int nodeMatrix[matrixSize][matrixSize];
 		for(int i = 0; i < matrixSize; i++) {
 			for(int j = 0; j < matrixSize; j++) {
@@ -51,6 +52,8 @@ int main(int argc, char *argv[]) {
 		cout << endl;
 		// end print matrix 
 	}
+	*/
+}
 
 	return 0;
 }
