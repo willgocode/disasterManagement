@@ -11,12 +11,18 @@ private:
 	bool _isDestination;
 	int _xCoordinate;
 	int _yCoordinate;
+	int _numberOfChannels;
 	int _currentChannel;
 	Node * _previous;
 	
 public:
 	Node() { _flagged = false; _isSource = false; _isDestination = false;
-		_xCoordinate = 0; _yCoordinate = 0; _currentChannel = rand() % 5; _previous = NULL;}
+		_xCoordinate = 0; _yCoordinate = 0; _numberOfChannels = 5; _currentChannel = rand() % _numberOfChannels; 
+		_previous = NULL;}
+
+	Node(int numberOfChannels) { _flagged= false; _isSource = false; _isDestination = false;
+		_xCoordinate = 0; _yCoordinate = 0; _numberOfChannels = numberOfChannels; 
+		_currentChannel = rand() % _numberOfChannels; _previous = NULL;}
 	
 	Node * getPrevious() { return _previous; };
 	bool isFlagged() { return _flagged; }
@@ -30,7 +36,7 @@ public:
 	void setDest(int x, int y) { _xCoordinate = x; _yCoordinate = y; _isDestination = true; }
 	void setPrevious(Node *previous) { _previous = previous; }
 	void setCoordinates(int x, int y) { _xCoordinate = x; _yCoordinate = y; }
-	void cycleChannel() { if(_currentChannel < 5) _currentChannel++; else _currentChannel = 0; }
+	void cycleChannel() { if(_currentChannel < _numberOfChannels - 1) _currentChannel++; else _currentChannel = 0; }
 };
 
 

@@ -10,21 +10,22 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
-	if(argc != 3) { cout << "./adhocSim.exe <numberOfNodes> <sizeOfMatrix>" << endl; return 0;}
+	if(argc != 4) { cout << "./adhocSim.exe <numberOfNodes> <sizeOfMatrix> <numberOfChannels>" << 
+		endl; return 0;}
 
 	cout << endl;
-	int srcX = 0, srcY = 0, destX = 0, destY = 0;
+	int srcX = 20, srcY = 10, destX = 20, destY = 40;
 	int numberOfNodes = stoi(argv[1]);
 	int matrixSize = stoi(argv[2]);
+	int numberOfChannels = stoi(argv[3]);
 	srand((int)time(0));
 	map<tuple<int, int>, Node* > nodeMap;
 	
-	generateNodes(&nodeMap, numberOfNodes, matrixSize);
-	createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
-	bool found = findPath(nodeMap, srcX, srcY, destX, destY, numberOfNodes);
-	if(found) { printPath(nodeMap, destX, destY); }
+	generateNodes(&nodeMap, numberOfNodes, matrixSize, numberOfChannels);
+	//createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
+	findPath(nodeMap, srcX, srcY, destX, destY, numberOfNodes);
+	printPath(nodeMap, destX, destY); 
 
-	/*
 	int nodeMatrix[matrixSize][matrixSize];
 	for(int i = 0; i < matrixSize; i++) {
 		for(int j = 0; j < matrixSize; j++) {
@@ -35,10 +36,10 @@ int main(int argc, char *argv[]) {
 	// set up matrix
 	for(auto it = nodeMap.begin(); it != nodeMap.end(); it++) {
 		auto coordinates = it -> first;
-		nodeMatrix[get<0>(coordinates)][get<1>(coordinates)] += 1;
+		nodeMatrix[get<1>(coordinates)][get<0>(coordinates)] += 1;
 	}
-	nodeMatrix[srcX][srcY]++;
-	nodeMatrix[destX][destY] += 2;
+	nodeMatrix[srcY][srcX]++;
+	nodeMatrix[destY][destX] += 2;
 	// end set up matrix 
 
 	// print matrix 
@@ -50,8 +51,6 @@ int main(int argc, char *argv[]) {
 	}
 	cout << endl;
 	// end print matrix 
-
-	*/
 
 	return 0;
 }

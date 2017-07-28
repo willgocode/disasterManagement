@@ -11,17 +11,36 @@
 
 using namespace std;
 
-void generateNodes(map<tuple<int, int>, Node* > *nodeMap, int numberOfNodes, int matrixSize) {
-	while(nodeMap -> size() != numberOfNodes) {
+/*
+struct DataContainer {
+	int channelPrepTime = 0;
+	int totalRREQs = 0;
+};
+*/
+
+void generateNodes(map<tuple<int, int>, Node* > *nodeMap, int numberOfNodes, int matrixSize, 
+		int numberOfChannels) {
+	while(nodeMap -> size() != numberOfNodes - 2) {
 		int randX = (rand() % matrixSize);
 		int randY = (rand() % matrixSize);
 		if(nodeMap -> find(make_tuple(randX, randY)) == nodeMap -> end()) {
-			Node *tempNode = new Node;
+			Node *tempNode = new Node(numberOfChannels);
 			tempNode -> setCoordinates(randX, randY);
 			tuple<int, int> coordinates = make_tuple(randX, randY);
 			nodeMap -> insert(pair<tuple<int, int>, Node* >(coordinates, tempNode));
 		}
 	}
+
+	tuple<int, int> srcCoords = make_tuple(20, 10);
+	tuple<int, int> destCoords = make_tuple(20, 40);
+	Node *srcNode = new Node;
+	Node *destNode = new Node;
+	srcNode -> setCoordinates(20, 10);
+	destNode -> setCoordinates(20, 40);
+	srcNode -> setSource(20, 10);
+	destNode -> setSource(20, 40);
+	nodeMap -> insert(pair<tuple<int, int>, Node* >(srcCoords, srcNode));
+	nodeMap -> insert(pair<tuple<int, int>, Node* >(destCoords, destNode));
 }
 
 void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,int &srcY,int &destX,
@@ -55,8 +74,9 @@ void createSrcAndDestination(map<tuple<int, int>, Node* > *nodeMap, int &srcX,in
 	cout << "Destination: (" << destX << ", " << destY << ") " << endl;
 }
 
-bool findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY,
+DataContainer findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY,
 		int numberOfNodes) {
+
 	bool destinationReached = false;
 	queue<pair<tuple<int, int>, Node*> > nextQueue;
 	auto srcNode = nodeMap.find(make_tuple(srcX, srcY));
@@ -68,22 +88,24 @@ bool findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 	int timeWaitedForChannel = 0;
 	int timesTimedOut = 0;
 	int timesNotFound = 0;
+	DataContainer container;
 	//ofstream outputStream("outputFor20.txt");
 	
 	while(!nextQueue.empty() && !destinationReached) {
 		for(auto it = nodeMap.begin(); it != nodeMap.end() && unflagged != 0; it++) {
 			if(nextQueue.front().second -> isDest()) {
 				destinationReached = true;
-				totalNodes = nextQueue.size();
+				totalNodes = nodeMap.size() - unflagged;
 				break;
 			}
-			totalTime += 100;
 
+			/*
 			if(totalTime > 12000) { 
 				cout << "Request timed out." << endl;  
 				timesTimedOut += 1;
 				//return false; 
 			}
+			*/
 
 			pair<tuple<int, int>, Node*> topPair = nextQueue.front();
 			tuple<int, int> topCoordinates = topPair.first;
@@ -98,14 +120,10 @@ bool findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 			   get<1>(tempCoordinates) <= get<1>(topCoordinates) + 3 &&
 			   get<1>(tempCoordinates) >= get<1>(topCoordinates) - 3 &&
 			   !tempNode -> isFlagged()) {
-				int current = 0;	
 				while(tempNode -> getCurrentChannel() != 
 						srcNode -> second -> getCurrentChannel()) {
-					cycleAllNodes(nodeMap, srcX, srcY, destX, destY);
+					tempNode -> cycleChannel();
 					timeWaitedForChannel += 10;
-					current += 1;
-					cout << "Cycling: " << current << " " <<  tempNode -> getCurrentChannel() << " " <<
-						srcNode -> second -> getCurrentChannel() << endl;
 				}
 					
 				it -> second -> flagNode();
@@ -121,13 +139,15 @@ bool findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int des
 	if(!destinationReached) {
 		cout << "No path found." << endl;
 		timesNotFound += 1;
-		return false;
 	}
 
 	cout << "Total time taken is: " << totalTime << " ms." << endl;
 	cout << "Total time waited for a channel: " << timeWaitedForChannel << " ms." << endl;
 	//cout << "Number of unique nodes visited: " << totalNodes << "." << endl;
-	return true;
+	container.channelPrepTime = timeWaitedForChannel;
+	container.totalRREQs = totalNodes;
+
+	return container;
 }
 
 void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
@@ -146,16 +166,19 @@ void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
 	cout << endl;
 }
 
-void cycleAllNodes(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY, int destX, int destY) {
+/*
+void cycleAllNodes(map<tuple<int, int>, Node* > *nodeMap, int srcX, int srcY, int destX, int destY) {
 	tuple<int, int> srcCoordinates = make_tuple(srcX, srcY);
 	tuple<int, int> destCoordinates = make_tuple(destX, destY);
 
-	for(auto it = nodeMap.begin(); it != nodeMap.end(); it++) {
+	for(auto it = nodeMap -> begin(); it != nodeMap -> end(); it++) {
 		if(it -> first == srcCoordinates) 
 			continue;
 		if(it -> first == destCoordinates)
 			continue;
+		cout << get<0>(it -> first) << " " << get<1>(it -> first)  << endl;
 		it -> second -> cycleChannel();
 	}
 }
+*/
 #endif
