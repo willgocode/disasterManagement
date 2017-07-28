@@ -12,15 +12,18 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	if(argc != 4) { cout << "./adhocSim.exe <numberOfNodes> <sizeOfMatrix> <numberOfChannels>" << 
 		endl; return 0;}
+	srand(time(0));
+	gettimeofday(&time, NULL);
 
 	cout << endl;
 
+	for(int i = 0; i < 20; i++) {
 	int srcX = 20, srcY = 10, destX = 20, destY = 40;
 	int numberOfNodes = stoi(argv[1]);
 	int matrixSize = stoi(argv[2]);
 	int numberOfChannels = stoi(argv[3]);
-	srand((int)time(0));
 	map<tuple<int, int>, Node* > nodeMap;
+	srand(time(0));
 	
 	generateNodes(&nodeMap, numberOfNodes, matrixSize, numberOfChannels);
 	//createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
@@ -68,5 +71,6 @@ int main(int argc, char *argv[]) {
 	cout << endl;
 	// end print matrix 
 
+	}
 	return 0;
 }
