@@ -12,6 +12,7 @@ using namespace std;
 struct DataContainer {
 	int channelPrepTime = 0;
 	int totalRREQs = 0;
+	bool destinationFound = false;
 };
 
 // randomly generates nodes and stores them into an stl map
@@ -27,7 +28,7 @@ DataContainer findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY
 		int numberOfNodes);
 
 // print the path backwards from the destination
-void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY);
+int getPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY);
 
 // run through map and cycle through channels
 //void cycleAllNodes(map<tuple<int, int>, Node* > *nodeMap, int srcX, int srcY, int destX, int destY);

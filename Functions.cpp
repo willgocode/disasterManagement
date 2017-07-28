@@ -11,13 +11,6 @@
 
 using namespace std;
 
-/*
-struct DataContainer {
-	int channelPrepTime = 0;
-	int totalRREQs = 0;
-};
-*/
-
 void generateNodes(map<tuple<int, int>, Node* > *nodeMap, int numberOfNodes, int matrixSize, 
 		int numberOfChannels) {
 	while(nodeMap -> size() != numberOfNodes - 2) {
@@ -83,13 +76,9 @@ DataContainer findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY
 	nextQueue.push(make_pair(srcNode -> first, srcNode -> second));
 	srcNode -> second -> flagNode();
 	int unflagged = nodeMap.size() - 1;
-	int totalTime = 0;
 	int totalNodes = 0;
 	int timeWaitedForChannel = 0;
-	int timesTimedOut = 0;
-	int timesNotFound = 0;
 	DataContainer container;
-	//ofstream outputStream("outputFor20.txt");
 	
 	while(!nextQueue.empty() && !destinationReached) {
 		for(auto it = nodeMap.begin(); it != nodeMap.end() && unflagged != 0; it++) {
@@ -98,14 +87,6 @@ DataContainer findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY
 				totalNodes = nodeMap.size() - unflagged;
 				break;
 			}
-
-			/*
-			if(totalTime > 12000) { 
-				cout << "Request timed out." << endl;  
-				timesTimedOut += 1;
-				//return false; 
-			}
-			*/
 
 			pair<tuple<int, int>, Node*> topPair = nextQueue.front();
 			tuple<int, int> topCoordinates = topPair.first;
@@ -136,21 +117,18 @@ DataContainer findPath(map<tuple<int, int>, Node* > &nodeMap, int srcX, int srcY
 		nextQueue.pop();
 	}
 
-	if(!destinationReached) {
-		cout << "No path found." << endl;
-		timesNotFound += 1;
+	if(nodeMap[pair<int, int>(destX, destY)] -> getPrevious()) {
+		destinationReached = true;
 	}
 
-	cout << "Total time taken is: " << totalTime << " ms." << endl;
-	cout << "Total time waited for a channel: " << timeWaitedForChannel << " ms." << endl;
-	//cout << "Number of unique nodes visited: " << totalNodes << "." << endl;
 	container.channelPrepTime = timeWaitedForChannel;
 	container.totalRREQs = totalNodes;
+	container.destinationFound = destinationReached;
 
 	return container;
 }
 
-void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
+int getPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
 	auto it = nodeMap.find(make_pair(destX, destY));
 	Node *nodePtr = it -> second;
 	int counter = 1;
@@ -164,6 +142,7 @@ void printPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
 	}
 	cout << endl;
 	cout << endl;
+	return counter;
 }
 
 /*

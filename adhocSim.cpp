@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
 		endl; return 0;}
 
 	cout << endl;
+
 	int srcX = 20, srcY = 10, destX = 20, destY = 40;
 	int numberOfNodes = stoi(argv[1]);
 	int matrixSize = stoi(argv[2]);
@@ -23,8 +24,23 @@ int main(int argc, char *argv[]) {
 	
 	generateNodes(&nodeMap, numberOfNodes, matrixSize, numberOfChannels);
 	//createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
-	findPath(nodeMap, srcX, srcY, destX, destY, numberOfNodes);
-	printPath(nodeMap, destX, destY); 
+	DataContainer container = findPath(nodeMap, srcX, srcY, destX, destY, numberOfNodes);
+	int pathLength = getPath(nodeMap, destX, destY); 
+	int totalTime = pathLength * 100;
+
+	if(((totalTime * 2) + container.channelPrepTime) > 12000) {
+		cout << "Request timed out." << endl;
+		return 0;
+	}
+	
+	if(!container.destinationFound) {
+		cout << "Couldn't find destination." << endl;
+		return 0;
+	}
+
+	cout << "Total time for requests: " << totalTime + container.channelPrepTime << " ms." << endl;
+	cout << "Total time preparing channels: " << container.channelPrepTime << " ms." << endl;
+	cout << endl;
 
 	int nodeMatrix[matrixSize][matrixSize];
 	for(int i = 0; i < matrixSize; i++) {
