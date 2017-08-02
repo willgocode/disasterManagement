@@ -3,6 +3,7 @@
 #include <tuple>
 #include <map>
 #include <queue>
+#include <time.h>
 #include "Node.cpp"
 #include "Functions.h"
 
@@ -12,18 +13,19 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	if(argc != 4) { cout << "./adhocSim.exe <numberOfNodes> <sizeOfMatrix> <numberOfChannels>" << 
 		endl; return 0;}
-	srand(time(0));
-	gettimeofday(&time, NULL);
+
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	srand((time_t)ts.tv_nsec);
 
 	cout << endl;
 
-	for(int i = 0; i < 20; i++) {
+	//for(int i = 0; i < 20; i++) {
 	int srcX = 20, srcY = 10, destX = 20, destY = 40;
 	int numberOfNodes = stoi(argv[1]);
 	int matrixSize = stoi(argv[2]);
 	int numberOfChannels = stoi(argv[3]);
 	map<tuple<int, int>, Node* > nodeMap;
-	srand(time(0));
 	
 	generateNodes(&nodeMap, numberOfNodes, matrixSize, numberOfChannels);
 	//createSrcAndDestination(&nodeMap, srcX, srcY, destX, destY, numberOfNodes);
@@ -31,20 +33,27 @@ int main(int argc, char *argv[]) {
 	int pathLength = getPath(nodeMap, destX, destY); 
 	int totalTime = pathLength * 100;
 
-	if(((totalTime * 2) + container.channelPrepTime) > 12000) {
+	if(((totalTime) + container.channelPrepTime) > 6000) {
 		cout << "Request timed out." << endl;
+		cout << endl;
+		cout << "=============================================================================" << endl;
 		return 0;
 	}
 	
 	if(!container.destinationFound) {
 		cout << "Couldn't find destination." << endl;
+		cout << endl;
+		cout << "=============================================================================" << endl;
 		return 0;
 	}
 
-	cout << "Total time for requests: " << totalTime + container.channelPrepTime << " ms." << endl;
+	cout << "Total time for RREQ: " << totalTime + container.channelPrepTime << " ms." << endl;
+	cout << "Overall time: " << (totalTime * 2) + container.channelPrepTime << " ms." << endl;
 	cout << "Total time preparing channels: " << container.channelPrepTime << " ms." << endl;
 	cout << endl;
+	cout << "=============================================================================" << endl;
 
+	/*
 	int nodeMatrix[matrixSize][matrixSize];
 	for(int i = 0; i < matrixSize; i++) {
 		for(int j = 0; j < matrixSize; j++) {
@@ -71,6 +80,7 @@ int main(int argc, char *argv[]) {
 	cout << endl;
 	// end print matrix 
 
-	}
+	*/
+//	}
 	return 0;
 }

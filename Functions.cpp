@@ -132,16 +132,16 @@ int getPath(map<tuple<int, int>, Node* > nodeMap, int destX, int destY) {
 	auto it = nodeMap.find(make_pair(destX, destY));
 	Node *nodePtr = it -> second;
 	int counter = 1;
-	cout << "(" << get<0>(nodePtr -> getCoordinates()) << ", " << get<1>(nodePtr -> getCoordinates()) << ")";
+	//cout << "(" << get<0>(nodePtr -> getCoordinates()) << ", " << get<1>(nodePtr -> getCoordinates()) << ")";
 	nodePtr = nodePtr -> getPrevious();
 	while(nodePtr != NULL) {
-		cout << " <- (" << get<0>(nodePtr -> getCoordinates()) << ", "
-			 << get<1>(nodePtr -> getCoordinates()) << ")";
+		//cout << " <- (" << get<0>(nodePtr -> getCoordinates()) << ", "
+	//		 << get<1>(nodePtr -> getCoordinates()) << ")";
 		nodePtr = nodePtr -> getPrevious();
 		counter++; 
 	}
-	cout << endl;
-	cout << endl;
+//	cout << endl;
+//	cout << endl;
 	return counter;
 }
 
