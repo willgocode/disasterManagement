@@ -26,8 +26,8 @@ void generateNodes(map<tuple<int, int>, Node* > *nodeMap, int numberOfNodes, int
 
 	tuple<int, int> srcCoords = make_tuple(20, 10);
 	tuple<int, int> destCoords = make_tuple(20, 40);
-	Node *srcNode = new Node;
-	Node *destNode = new Node;
+	Node *srcNode = new Node(numberOfChannels);
+	Node *destNode = new Node(numberOfChannels);
 	srcNode -> setCoordinates(20, 10);
 	destNode -> setCoordinates(20, 40);
 	srcNode -> setSource(20, 10);
