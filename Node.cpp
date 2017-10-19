@@ -4,6 +4,9 @@
 
 using namespace std;
 
+/* Node class. Stores the previous. Some private variables may not be used at */
+/* moment, but it's there just in case.										  */
+
 class Node {
 private:
 	bool _flagged;
@@ -17,8 +20,10 @@ private:
 	
 public:
 	Node() { _flagged = false; _isSource = false; _isDestination = false;
-		_xCoordinate = 0; _yCoordinate = 0; _numberOfChannels = 5; _currentChannel = rand() % _numberOfChannels; 
-		_previous = NULL;}
+		_xCoordinate = 0; _yCoordinate = 0; _numberOfChannels = 5; 
+		_currentChannel = rand() % _numberOfChannels; 
+		_previous = NULL;
+	}
 
 	Node(int numberOfChannels) { _flagged= false; _isSource = false; _isDestination = false;
 		_xCoordinate = 0; _yCoordinate = 0; _numberOfChannels = numberOfChannels; 
@@ -36,7 +41,9 @@ public:
 	void setDest(int x, int y) { _xCoordinate = x; _yCoordinate = y; _isDestination = true; }
 	void setPrevious(Node *previous) { _previous = previous; }
 	void setCoordinates(int x, int y) { _xCoordinate = x; _yCoordinate = y; }
-	void cycleChannel() { if(_currentChannel < _numberOfChannels - 1) _currentChannel++; else _currentChannel = 0; }
+	void cycleChannel() { 
+		if(_currentChannel < _numberOfChannels - 1) _currentChannel++; else _currentChannel = 0; 
+	}
 };
 
 
